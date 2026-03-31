@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover Letter Generator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Cover Letter Generator</h1>
+            <p class="subtitle">Upload your resume, fill in the details, and let AI craft a tailored cover letter.</p>
+        </header>
+
+        <main class="form-container">
+            <!-- API Key Section -->
+            <section class="form-section">
+                <h2>API Configuration</h2>
+                <div class="form-group">
+                    <label for="api-provider">AI Provider</label>
+                    <select id="api-provider">
+                        <option value="openai">OpenAI (GPT-4o)</option>
+                        <option value="anthropic">Anthropic (Claude)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="api-key">API Key</label>
+                    <div class="input-with-action">
+                        <input type="password" id="api-key" placeholder="Enter your API key">
+                        <button type="button" id="toggle-key-visibility" class="btn-icon" title="Show/Hide">
+                            <span class="eye-icon">&#128065;</span>
+                        </button>
+                    </div>
+                    <small>Your key is stored locally in your browser and never sent to any server except the AI provider.</small>
+                </div>
+            </section>
+
+            <!-- Personal Info Section -->
+            <section class="form-section">
+                <h2>Your Information</h2>
+                <div class="form-group">
+                    <label for="resume-upload">Upload Resume <span class="required">*</span></label>
+                    <div class="file-upload-area" id="resume-drop-zone">
+                        <input type="file" id="resume-upload" accept=".pdf,.doc,.docx" hidden>
+                        <div class="file-upload-content">
+                            <span class="upload-icon">&#128196;</span>
+                            <p>Drag & drop your resume here, or <button type="button" class="link-btn" id="browse-resume">browse</button></p>
+                            <small>Accepts .pdf, .doc, .docx</small>
+                        </div>
+                        <div class="file-upload-selected" hidden>
+                            <span class="file-name"></span>
+                            <button type="button" class="btn-remove" title="Remove">&times;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="user-name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="user-name" placeholder="e.g. Baxter Brown">
+                    </div>
+                    <div class="form-group">
+                        <label for="user-email">Email Address <span class="required">*</span></label>
+                        <input type="email" id="user-email" placeholder="e.g. baxter@example.com">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="user-phone">Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="user-phone" placeholder="e.g. 707-342-0685">
+                    </div>
+                    <div class="form-group">
+                        <label for="user-address">Address <span class="required">*</span></label>
+                        <input type="text" id="user-address" placeholder="e.g. 511 17th Ave N, Nashville, TN 37203">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="user-linkedin">LinkedIn Profile URL <span class="required">*</span></label>
+                    <input type="url" id="user-linkedin" placeholder="e.g. https://linkedin.com/in/baxterbrown">
+                </div>
+            </section>
+
+            <!-- Target Company Section -->
+            <section class="form-section">
+                <h2>Target Position</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="company-name">Company Name <span class="required">*</span></label>
+                        <input type="text" id="company-name" placeholder="e.g. Google">
+                    </div>
+                    <div class="form-group">
+                        <label for="job-title">Job Title <span class="required">*</span></label>
+                        <input type="text" id="job-title" placeholder="e.g. Product Manager Intern">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="job-description-url">Job Posting URL <span class="optional">(optional)</span></label>
+                    <input type="url" id="job-description-url" placeholder="https://careers.example.com/job/12345">
+                </div>
+                <div class="form-group">
+                    <label for="job-description">Job Description <span class="required">*</span></label>
+                    <textarea id="job-description" rows="6" placeholder="Paste the full job description here. This is recommended even if you provide a URL, as it ensures the AI has access to the complete posting."></textarea>
+                </div>
+            </section>
+
+            <!-- Education Section -->
+            <section class="form-section">
+                <h2>Education Details</h2>
+                <div class="form-group">
+                    <label for="graduation-date">Graduation Date <span class="optional">(optional)</span></label>
+                    <input type="text" id="graduation-date" placeholder="e.g. May 2026">
+                </div>
+                <div class="form-group">
+                    <label for="concentrations">Concentrations / Focus Areas <span class="optional">(optional)</span></label>
+                    <textarea id="concentrations" rows="2" placeholder="e.g. Marketing, Strategy"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="emphasis">Emphasis <span class="optional">(optional)</span></label>
+                    <input type="text" id="emphasis" placeholder="e.g. Data Analytics">
+                </div>
+                <div class="form-group">
+                    <label for="courses">Relevant Courses <span class="optional">(optional)</span></label>
+                    <textarea id="courses" rows="3" placeholder="e.g. Strategic Marketing, Financial Analysis, Data Science for Business"></textarea>
+                </div>
+            </section>
+
+            <!-- Additional Details Section -->
+            <section class="form-section">
+                <h2>Additional Details</h2>
+                <div class="form-group">
+                    <label for="company-interactions">Interactions with Company Representatives <span class="optional">(optional)</span></label>
+                    <textarea id="company-interactions" rows="3" placeholder="e.g. I spoke with John Smith, a Senior PM, at the career fair on March 15. He mentioned the team is focused on AI-driven product features."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="additional-details">Additional Details for the AI <span class="optional">(optional)</span></label>
+                    <textarea id="additional-details" rows="3" placeholder="e.g. I am willing to relocate, I can start full-time in June 2026, I have a security clearance, etc."></textarea>
+                </div>
+            </section>
+
+            <!-- Generate Button -->
+            <div class="generate-section">
+                <button type="button" id="generate-btn" class="btn-primary">
+                    <span class="btn-text">Generate Cover Letter</span>
+                    <span class="btn-loading" hidden>
+                        <span class="spinner"></span>
+                        Generating...
+                    </span>
+                </button>
+            </div>
+
+            <!-- Output Section -->
+            <section class="output-section" id="output-section" hidden>
+                <h2>Generated Cover Letter</h2>
+                <div class="output-actions">
+                    <button type="button" id="download-docx" class="btn-secondary">Download .docx</button>
+                    <button type="button" id="copy-text" class="btn-secondary">Copy Text</button>
+                    <button type="button" id="regenerate-btn" class="btn-secondary">Regenerate</button>
+                </div>
+                <div class="output-preview" id="output-preview"></div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <p>Built by <a href="https://linkedin.com/in/baxterbrown" target="_blank" rel="noopener">Baxter Brown</a>. Your data stays in your browser.</p>
+        </footer>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://unpkg.com/docx@9.5.0/build/index.umd.min.js"></script>
+    <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+    <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+
+    <!-- App -->
+    <script type="module" src="js/resume-parser.js"></script>
+    <script type="module" src="js/ai-service.js"></script>
+    <script type="module" src="js/docx-generator.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
