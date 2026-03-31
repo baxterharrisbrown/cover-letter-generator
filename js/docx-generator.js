@@ -1,11 +1,16 @@
 // DOCX Generator - creates a Word document matching the cover letter template
 
-const {
-    Document, Packer, Paragraph, TextRun, AlignmentType,
-    TabStopType, TabStopPosition, ExternalHyperlink, BorderStyle
-} = docx;
+let docxLib = null;
+async function loadDocx() {
+    if (!docxLib) {
+        docxLib = await import('https://cdn.jsdelivr.net/npm/docx@9.5.0/+esm');
+    }
+    return docxLib;
+}
 
 export async function generateDOCX(data) {
+    const { Document, Packer, Paragraph, TextRun, AlignmentType,
+        ExternalHyperlink, BorderStyle } = await loadDocx();
     const today = new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',

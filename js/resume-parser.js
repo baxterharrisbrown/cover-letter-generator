@@ -31,8 +31,8 @@ async function parsePDF(file) {
 }
 
 async function parseDOCX(file) {
-    // mammoth is loaded globally via CDN
+    const mammothLib = await import('https://cdn.jsdelivr.net/npm/mammoth@1.8.0/+esm');
     const arrayBuffer = await file.arrayBuffer();
-    const result = await mammoth.extractRawText({ arrayBuffer });
+    const result = await mammothLib.extractRawText({ arrayBuffer });
     return result.value.trim();
 }

@@ -8,10 +8,15 @@ import { generateDOCX } from './docx-generator.js';
 let resumeFile = null;
 let resumeText = '';
 let generatedBody = '';
+let currentMode = 'free'; // 'free' or 'own-key'
 
 // DOM Elements
 const $ = id => document.getElementById(id);
 
+const modeFreeBtn = $('mode-free');
+const modeOwnKeyBtn = $('mode-own-key');
+const freeModeInfo = $('free-mode-info');
+const ownKeyFields = $('own-key-fields');
 const apiProvider = $('api-provider');
 const apiKey = $('api-key');
 const toggleKeyBtn = $('toggle-key-visibility');
@@ -88,6 +93,18 @@ function loadFromStorage() {
     el.addEventListener('change', saveToStorage);
 });
 
+// --- Mode Toggle ---
+function setMode(mode) {
+    currentMode = mode;
+    modeFreeBtn.classList.toggle('active', mode === 'free');
+    modeOwnKeyBtn.classList.toggle('active', mode === 'own-key');
+    freeModeInfo.hidden = mode !== 'free';
+    ownKeyFields.hidden = mode !== 'own-key';
+}
+
+modeFreeBtn.addEventListener('click', () => setMode('free'));
+modeOwnKeyBtn.addEventListener('click', () => setMode('own-key'));
+
 // --- File Upload ---
 browseResumeBtn.addEventListener('click', () => resumeUpload.click());
 resumeDropZone.addEventListener('click', (e) => {
@@ -159,7 +176,7 @@ regenerateBtn.addEventListener('click', () => runGeneration());
 async function runGeneration() {
     // Validate required fields
     const errors = [];
-    if (!apiKey.value.trim()) errors.push('API Key');
+    if (currentMode === 'own-key' && !apiKey.value.trim()) errors.push('API Key');
     if (!resumeFile) errors.push('Resume');
     if (!userName.value.trim()) errors.push('Full Name');
     if (!userEmail.value.trim()) errors.push('Email');
@@ -209,7 +226,7 @@ async function runGeneration() {
         };
 
         // Generate via AI
-        generatedBody = await generateCoverLetter(data, apiProvider.value, apiKey.value.trim());
+        generatedBody = await generateCoverLetter(data, currentMode, apiProvider.value, apiKey.value.trim());
 
         // Show output
         outputSection.hidden = false;
@@ -245,7 +262,8 @@ downloadDocxBtn.addEventListener('click', async () => {
 
         const blob = await generateDOCX(data);
         const filename = `${data.userName.replace(/\s+/g, '_')}_Cover_Letter_${data.companyName.replace(/\s+/g, '_')}.docx`;
-        saveAs(blob, filename);
+        const fileSaver = await import('https://cdn.jsdelivr.net/npm/file-saver@2.0.5/+esm');
+        (fileSaver.saveAs || fileSaver.default)(blob, filename);
     } catch (err) {
         console.error(err);
         showToast('Failed to generate DOCX file.', 'error');

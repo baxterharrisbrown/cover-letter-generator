@@ -112,14 +112,41 @@ Return ONLY the body of the cover letter (the paragraphs between "Dear [Recipien
     return prompt;
 }
 
-export async function generateCoverLetter(data, provider, apiKey) {
+// Vercel backend URL - update this after deploying to Vercel
+const BACKEND_URL = localStorage.getItem('cl_backend_url') || '';
+
+export async function generateCoverLetter(data, mode, provider, apiKey) {
     const prompt = buildPrompt(data);
 
-    if (provider === 'openai') {
+    if (mode === 'free') {
+        return callFreeBackend(prompt);
+    } else if (provider === 'openai') {
         return callOpenAI(prompt, apiKey);
     } else if (provider === 'anthropic') {
         return callAnthropic(prompt, apiKey);
     }
+}
+
+async function callFreeBackend(prompt) {
+    const backendUrl = BACKEND_URL;
+    if (!backendUrl) {
+        throw new Error('Free mode is not yet configured. Please use your own API key, or check back later.');
+    }
+
+    const response = await fetch(`${backendUrl}/api/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ prompt })
+    });
+
+    if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error || `Server error: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result.text;
 }
 
 async function callOpenAI(prompt, apiKey) {
