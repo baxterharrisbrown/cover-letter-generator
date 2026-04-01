@@ -112,8 +112,8 @@ Return ONLY the body of the cover letter (the paragraphs between "Dear [Recipien
     return prompt;
 }
 
-// Vercel backend URL - update this after deploying to Vercel
-const BACKEND_URL = localStorage.getItem('cl_backend_url') || '';
+// Vercel backend URL
+const BACKEND_URL = 'https://cover-letter-generator-ecru-nine.vercel.app';
 
 export async function generateCoverLetter(data, mode, provider, apiKey) {
     const prompt = buildPrompt(data);
