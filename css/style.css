@@ -63,6 +63,23 @@
     --radius-lg: 12px;
 }
 
+@media (prefers-color-scheme: light) {
+    :root {
+        --color-bg-base:        #F8F5EF;
+        --color-bg-surface:     #EFECE6;
+        --color-bg-elevated:    #E8E4DD;
+        --color-bg-subtle:      #E0DDD6;
+        --color-text-primary:   #1A1816;
+        --color-text-secondary: #6B6763;
+        --color-text-muted:     #B0ADA9;
+        --color-accent:         #C49730;
+        --color-accent-dim:     #A07820;
+        --color-accent-text:    #F8F5EF;
+        --color-border:         rgba(26, 24, 22, 0.08);
+        --color-border-strong:  rgba(26, 24, 22, 0.16);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
