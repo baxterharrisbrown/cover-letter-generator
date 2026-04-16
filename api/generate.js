@@ -1,11 +1,11 @@
-import crypto from 'crypto';
+const crypto = require('crypto');
 
 const RATE_LIMIT_SECRET = process.env.RATE_LIMIT_SECRET || 'cover-letter-gen-default-secret';
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const COOKIE_NAME = 'cl_gen_token';
 
 function getTodayString() {
-    return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    return new Date().toISOString().slice(0, 10);
 }
 
 function createToken(ip, date) {
@@ -24,7 +24,7 @@ function parseCookies(cookieHeader) {
     return cookies;
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     // CORS headers for GitHub Pages
     const origin = req.headers.origin || '';
     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -108,4 +108,4 @@ export default async function handler(req, res) {
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Internal server error' });
     }
-}
+};
